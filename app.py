@@ -1,8 +1,10 @@
 from flask import Flask, request, jsonify
-from flask_cors import CORS  # ← ADD THIS
+from flask_cors import CORS
 
 app = Flask(__name__)
-CORS(app)  # ← ENABLE CORS FOR ALL DOMAINS
+
+# ✅ Only allow requests from your domain
+CORS(app, origins=["https://www.asthaguru.com"])
 
 @app.route('/')
 def home():
