@@ -3,15 +3,19 @@ from flask_cors import CORS
 
 app = Flask(__name__)
 
-# ✅ This handles OPTIONS preflight AND sets correct headers for your domain
-CORS(app, resources={r"/calculate": {"origins": "https://www.asthaguru.com"}})
+# ✅ This enables CORS on all routes, for specific domain
+CORS(app, supports_credentials=True, origins=["https://www.asthaguru.com"])
 
 @app.route('/')
 def home():
-    return '✅ Calculator API is live. Use POST /calculate with JSON: {"a": 5, "b": 3, "operation": "add"}'
+    return '✅ Calculator API is live. POST to /calculate with JSON'
 
-@app.route('/calculate', methods=['POST'])
+@app.route('/calculate', methods=['POST', 'OPTIONS'])
 def calculate():
+    if request.method == 'OPTIONS':
+        # CORS preflight request
+        return '', 204
+
     data = request.get_json()
     a = data.get('a')
     b = data.get('b')
